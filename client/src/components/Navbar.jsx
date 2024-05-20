@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { LuListTodo } from "react-icons/lu";
 import { MdOutlineKeyboardArrowDown, MdMenu } from "react-icons/md";
 import { FaCircleNotch } from "react-icons/fa";
+import { AiOutlineLogout } from "react-icons/ai";
 
 function Navbar({ setShowForm }) {
   const [showMenu, setShowMenu] = useState(false);
@@ -9,6 +10,10 @@ function Navbar({ setShowForm }) {
   const toggleMenu = () => {
     setShowMenu(!showMenu);
   };
+
+  async function handleLogOut() {
+    localStorage.removeItem("token");
+  }
 
   return (
     <section className="bg-white border-b border-gray-300 flex justify-between items-center p-4 shadow-md">
@@ -48,10 +53,13 @@ function Navbar({ setShowForm }) {
       </div>
 
       {/* Right section */}
-      <div className="relative flex items-center">
+      <div className="relative flex items-center mr-5 cursor-pointer">
         <FaCircleNotch className="text-4xl animate-spin" />
         <span className="absolute text-lg font-semibold inset-0 flex justify-center items-center">
-          A
+          <AiOutlineLogout
+            className="text-red-500"
+            onClick={() => handleLogOut()}
+          />
         </span>
       </div>
     </section>

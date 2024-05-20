@@ -1,18 +1,34 @@
-import Task from "./pages/tasks.jsx";
+import React, { useState } from "react";
+import { Routes, Route, Navigate } from "react-router-dom";
 import LoginSignup from "./pages/loginSignup.jsx";
-import { BrowserRouter, Route, Routes } from "react-router-dom";
-import AccountProvider from "./context/AccountProvider.jsx";
+import Task from "./pages/tasks.jsx";
 
 function App() {
+  const [isLoggedIn, setIsLoggedIn] = useState(!!localStorage.getItem("token"));
+
+  const handleLogin = (token) => {
+    localStorage.setItem("token", token);
+    setIsLoggedIn(true);
+  };
+
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    setIsLoggedIn(false);
+  };
+
   return (
-    <BrowserRouter>
-      <AccountProvider>
-        <Routes>
-          <Route path="/task/:id" element={<Task />} />
-          <Route path="/" element={<LoginSignup />} />
-        </Routes>
-      </AccountProvider>
-    </BrowserRouter>
+    <Routes>
+      <Route
+        path="/"
+        element={<LoginSignup onLogin={handleLogin} isLoggedIn={isLoggedIn} />}
+      />
+      <Route
+        path="/task/:id"
+        element={
+          isLoggedIn ? <Task onLogout={handleLogout} /> : <Navigate to="/" />
+        }
+      />
+    </Routes>
   );
 }
 

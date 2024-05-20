@@ -1,12 +1,10 @@
-import React, { useState, useContext } from "react";
-import { AccountContext } from "../context/AccountProvider.jsx";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { UserURL } from "../constants/constant.js";
 
 function LoginSignup() {
   const [isLogin, setIsLogin] = useState(true);
-  const { setAccount } = useContext(AccountContext);
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -22,7 +20,6 @@ function LoginSignup() {
         password: password,
       })
       .then((res) => {
-        setAccount(res.data.token);
         localStorage.setItem("token", res.data.token);
         navigate(`/task/:${res.data.userId}`);
       })
@@ -41,7 +38,6 @@ function LoginSignup() {
         password: password,
       })
       .then((res) => {
-        setAccount(res.data.token);
         localStorage.setItem("token", res.data.token);
 
         navigate(`/task/:${res.data.userId}`);
