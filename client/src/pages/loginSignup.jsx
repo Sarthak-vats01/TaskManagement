@@ -22,8 +22,8 @@ function LoginSignup() {
         password: password,
       })
       .then((res) => {
-        console.log(res);
         setAccount(res.data.token);
+        localStorage.setItem("token", res.data.token);
         navigate(`/task/:${res.data.userId}`);
       })
       .catch((err) => {
@@ -41,8 +41,8 @@ function LoginSignup() {
         password: password,
       })
       .then((res) => {
-        console.log(res);
         setAccount(res.data.token);
+        localStorage.setItem("token", res.data.token);
 
         navigate(`/task/:${res.data.userId}`);
       })

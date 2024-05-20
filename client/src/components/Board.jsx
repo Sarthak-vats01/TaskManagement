@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback } from "react";
+import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import "./board.css";
 import { MdDeleteOutline } from "react-icons/md";
@@ -22,27 +22,27 @@ function Board({
   const [boardId, setBoardId] = useState("");
   const [listName, setListName] = useState("");
 
-  const fetchBoards = useCallback(async () => {
+  async function handleDelete(id) {
+    try {
+      axios.delete(`${BoardURL}/deleteBoard`, { data: { boardId: id } });
+      fetchBoards();
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  async function fetchBoards() {
     try {
       const res = await axios.get(`${BoardURL}/fetchBoard?userId=${userId}`);
       setBoards(res.data);
     } catch (error) {
       console.log(error);
     }
-  }, [userId]);
+  }
 
   useEffect(() => {
     fetchBoards();
-  }, [fetchBoards]);
-
-  async function handleDelete(id) {
-    try {
-      await axios.delete(`${BoardURL}/deleteBoard`, { data: { boardId: id } });
-      fetchBoards();
-    } catch (error) {
-      console.log(error);
-    }
-  }
+  }, [userId]);
 
   const handleAddListClick = () => {
     setShowDialog(true); // Open the dialog when "Add List" button is clicked

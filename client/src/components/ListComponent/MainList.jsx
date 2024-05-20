@@ -24,7 +24,7 @@ function MainList() {
   async function handleCreateTask(listId) {
     console.log("Creating new task:", newTaskName);
     try {
-      await axios.post(`${ListURL}/createTask`, {
+      const response = await axios.post(`${ListURL}/createTask`, {
         listId: listId,
         name: newTaskName,
       });
@@ -36,7 +36,7 @@ function MainList() {
   async function deleteTask(listId, taskId) {
     console.log(listId, taskId);
     try {
-      await axios.delete(`${ListURL}/deleteTask`, {
+      const response = await axios.delete(`${ListURL}/deleteTask`, {
         data: { listId, taskId }, // Send data object containing listId and taskId
       });
     } catch (error) {
@@ -46,7 +46,7 @@ function MainList() {
 
   async function deleteList(listId) {
     try {
-      await axios.delete(`${ListURL}/deleteList`, {
+      const response = await axios.delete(`${ListURL}/deleteList`, {
         data: { listId },
       });
     } catch (error) {
@@ -58,7 +58,7 @@ function MainList() {
     const name = editTask;
     console.log(listId, taskId, name);
     try {
-      await axios.patch(`${ListURL}/editTask`, {
+      const response = await axios.patch(`${ListURL}/editTask`, {
         listId,
         taskId,
         name,
@@ -145,7 +145,7 @@ function MainList() {
           ))}
         </div>
       ) : (
-        <div>Please choose your board . If choosen then create lists</div>
+        <div>Please choose your board</div>
       )}
     </div>
   );
