@@ -3,10 +3,15 @@ import List from "../model/listModel.js";
 
 async function fetchBoard(req, res) {
   const userId = req.query.userId;
+  console.log(`User ID: ${userId}`); // This should log the correct userId
 
   try {
     // Find all boards belonging to the user
     const boards = await boardModel.find({ boardUserId: userId });
+
+    if (boards.length === 0) {
+      console.log("No boards found for this user.");
+    }
 
     res.status(200).send(boards);
   } catch (error) {

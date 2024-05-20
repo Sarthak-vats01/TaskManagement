@@ -18,7 +18,7 @@ async function createList(req, res) {
 async function fetchLists(req, res) {
   const { boardId } = req.query;
 
-  console.log(boardId);
+  console.log("fetchList function", boardId);
 
   try {
     const lists = await List.find({ listBoardId: boardId });

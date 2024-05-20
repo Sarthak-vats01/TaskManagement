@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import "./board.css";
 import { MdDeleteOutline } from "react-icons/md";
 import axios from "axios";
 import { BoardURL } from "../constants/constant.js";
 import { CgPlayListAdd } from "react-icons/cg";
+import "./board.css"; // Ensure this is correctly imported if you have additional styles
 
 function Board({
   showForm,
@@ -24,7 +24,7 @@ function Board({
 
   async function handleDelete(id) {
     try {
-      axios.delete(`${BoardURL}/deleteBoard`, { data: { boardId: id } });
+      await axios.delete(`${BoardURL}/deleteBoard`, { data: { boardId: id } });
       fetchBoards();
     } catch (error) {
       console.log(error);
@@ -32,6 +32,7 @@ function Board({
   }
 
   async function fetchBoards() {
+    console.log("fetchBoards", userId);
     try {
       const res = await axios.get(`${BoardURL}/fetchBoard?userId=${userId}`);
       setBoards(res.data);
@@ -45,21 +46,35 @@ function Board({
   }, [userId]);
 
   const handleAddListClick = () => {
-    setShowDialog(true); // Open the dialog when "Add List" button is clicked
+    setShowDialog(true);
   };
 
   const handleCloseDialog = () => {
-    setShowDialog(false); // Close the dialog when "Cancel" button is clicked
+    setShowDialog(false);
   };
 
   const handleAddListWithId = (id) => {
-    setBoardId(id); // Set the boardId state
-    handleAddListClick(); // Call handleAddListClick to open the dialog
+    setBoardId(id);
+    handleAddListClick();
+  };
+
+  const handleCreateBoard = async (userId, boardName) => {
+    try {
+      await axios.post(
+        `${BoardURL}/createBoard`,
+        { name: boardName },
+        { params: { userId } }
+      );
+      setShowForm(false); // Hide the form
+      fetchBoards(); // Refresh the list of boards
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (
     <div className="relative">
-      <section className="border border-gray-300 max-h-40 overflow-x-auto flex flex-wrap p-4 hide-scrollbar bg-gray-100 ">
+      <section className="border border-gray-300 max-h-40 overflow-x-auto flex flex-wrap p-4 hide-scrollbar bg-gray-100">
         {boards.map((item) => (
           <div
             className="relative w-full sm:w-1/2 md:w-1/3 lg:w-1/4 xl:w-1/5 p-2"
@@ -72,7 +87,7 @@ function Board({
               </span>
               <div className="absolute top-0 right-0 p-2">
                 <MdDeleteOutline
-                  className="text-gray-800 group-hover:text-white "
+                  className="text-gray-800 group-hover:text-white"
                   onClick={() => handleDelete(item._id)}
                 />
                 <CgPlayListAdd
@@ -85,8 +100,14 @@ function Board({
         ))}
       </section>
       {showForm && (
-        <div className="absolute inset-0 flex justify-center items-center bg-gray-900 bg-opacity-50 z-20">
-          <form className="bg-white p-4 rounded-lg">
+        <div className="fixed inset-0 flex justify-center items-center bg-gray-900 bg-opacity-50 z-20">
+          <form
+            className="bg-white p-4 rounded-lg"
+            onSubmit={(e) => {
+              e.preventDefault();
+              handleCreateBoard(userId, boardName);
+            }}
+          >
             <input
               type="text"
               placeholder="Enter board name"
@@ -97,11 +118,11 @@ function Board({
             <button
               type="submit"
               className="bg-blue-500 text-white px-4 py-2 rounded-md"
-              onClick={() => createBoard(userId, boardName)}
             >
               Create
             </button>
             <button
+              type="button"
               className="bg-blue-500 text-red-400 px-4 py-2 ml-4 rounded-md"
               onClick={() => setShowForm(false)}
             >
@@ -110,9 +131,8 @@ function Board({
           </form>
         </div>
       )}
-      {/* Dialog box for adding a new list */}
       {showDialog && (
-        <div className="absolute inset-0 flex justify-center items-center bg-gray-900 bg-opacity-50 z-20">
+        <div className="fixed inset-0 flex justify-center items-center bg-gray-900 bg-opacity-50 z-20">
           <div className="bg-white p-4 rounded-lg">
             <input
               type="text"
@@ -122,12 +142,13 @@ function Board({
               value={listName}
             />
             <button
-              className="bg-blue-500 text-white px-4 py-2 rounded-md "
+              className="bg-blue-500 text-white px-4 py-2 rounded-md"
               onClick={() => handleCreateList(boardId, listName)}
             >
               Create
             </button>
             <button
+              type="button"
               className="bg-blue-500 text-red-400 px-4 py-2 ml-4 rounded-md"
               onClick={handleCloseDialog}
             >

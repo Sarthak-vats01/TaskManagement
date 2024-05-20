@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { UserURL } from "../constants/constant.js";
 
-function LoginSignup() {
+function LoginSignup({ onLogin, isLoggedIn }) {
   const [isLogin, setIsLogin] = useState(true);
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -21,7 +21,8 @@ function LoginSignup() {
       })
       .then((res) => {
         localStorage.setItem("token", res.data.token);
-        navigate(`/task/:${res.data.userId}`);
+        onLogin(res.data.token);
+        navigate(`/task/${res.data.userId}`);
       })
       .catch((err) => {
         console.log(err);
@@ -39,8 +40,8 @@ function LoginSignup() {
       })
       .then((res) => {
         localStorage.setItem("token", res.data.token);
-
-        navigate(`/task/:${res.data.userId}`);
+        onLogin(res.data.token);
+        navigate(`/task/${res.data.userId}`);
       })
       .catch((err) => {
         console.log(err);
@@ -93,7 +94,7 @@ function LoginSignup() {
           <form>
             <div className="mb-4">
               <label className="block text-gray-700 mb-2" htmlFor="name">
-                name
+                Name
               </label>
               <input
                 className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:border-blue-500"
