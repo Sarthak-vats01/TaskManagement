@@ -1,4 +1,4 @@
-import { useEffect, useState, useContext } from "react";
+import { useEffect, useState, useContext, useCallback } from "react";
 import { useParams } from "react-router-dom";
 import { AccountContext } from "../context/AccountProvider.jsx";
 import Board from "../components/Board";
@@ -32,28 +32,24 @@ function Task() {
     }
   }
 
-  async function fetchList(boardId) {
-    console.log("fetchList-", boardId);
+  const fetchList = useCallback(async () => {
+    console.log("fetchList-", userId);
     try {
-      const response = await axios.get(
-        `${ListURL}/fetchList?boardId=${boardId}`
-      );
+      const response = await axios.get(`${ListURL}/fetchList?userId=${userId}`);
       setList(response.data);
       console.log(response);
     } catch (error) {
       console.log(error);
     }
-  }
+  }, [userId, setList]);
 
   async function handleCreateList(boardId, listName) {
     try {
-      const response = await axios.post(
-        `${ListURL}/createList?userId=${userId}`,
-        {
-          listBoardId: boardId,
-          name: listName,
-        }
-      );
+      await axios.post(`${ListURL}/createList?userId=${userId}`, {
+        listBoardId: boardId,
+        name: listName,
+      });
+      fetchList();
     } catch (error) {
       console.log(error);
     }
@@ -62,7 +58,7 @@ function Task() {
 
   useEffect(() => {
     fetchList();
-  }, []);
+  }, [fetchList]);
 
   return (
     <div className="App border border-black h-screen w-screen">
