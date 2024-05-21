@@ -8,12 +8,17 @@ import listRoutes from "./routes/listRoutes.js";
 const app = express();
 
 app.use(express.json());
-app.use(
-  cors({
-    origin:
-      "https://task-management-hkbm9ndrs-sarthak-vats01s-projects.vercel.app", // Replace this with your Vercel app's domain
-  })
-);
+
+const corsOptions = {
+  origin: [
+    "https://taskmanagement-1-yi4t.onrender.com",
+    "https://task-management-hkbm9ndrs-sarthak-vats01s-projects.vercel.app",
+    "http://localhost:3000",
+  ],
+  optionsSuccessStatus: 200, // For legacy browser support
+};
+
+app.use(cors(corsOptions));
 
 const port = 5000;
 
