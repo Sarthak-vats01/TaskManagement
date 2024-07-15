@@ -1,5 +1,5 @@
-const UserURL = "http://localhost:5000/user";
-const BoardURL = "http://localhost:5000/board";
-const ListURL = "http://localhost:5000/list";
+const UserURL = "https://taskmanagement-7utp.onrender.com/user";
+const BoardURL = "https://taskmanagement-7utp.onrender.com/board";
+const ListURL = "https://taskmanagement-7utp.onrender.com/list";
 
 export { UserURL, BoardURL, ListURL };
